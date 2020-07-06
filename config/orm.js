@@ -1,10 +1,8 @@
-// Import MySQL connection.
+// Import MySQL connection
 const connection = require("../config/connection.js");
 
-// Helper function for SQL syntax.
-// Let's say we want to pass 3 values into the mySQL query.
-// In order to write the query, we need 3 question marks.
-// The above helper function loops through and creates an array of question marks - ["?", "?", "?"] - and turns it into a string.
+// In order to write a query to pass three values into the MySQL query, we need 3 question marks
+// Helper function loops through and creates an array of question marks - ["?", "?", "?"] - and turns it into a string
 // ["?", "?", "?"].toString() => "?,?,?";
 const printQuestionMarks = num => {
   let arr = [];
@@ -20,27 +18,28 @@ const printQuestionMarks = num => {
 const objToSql = ob => {
   let arr = [];
 
-  // loop through the keys and push the key/value as a string int arr
+  // Loop through the keys and push the key/value as a string int arr
   for (let key in ob) {
     let value = ob[key];
-    // check to skip hidden properties
+    // Check to skip hidden properties
     if (Object.hasOwnProperty.call(ob, key)) {
-      // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
+      // If string with spaces, add quotations (Flying Dutchman => 'Flying Dutchman')
       if (typeof value === "string" && value.indexOf(" ") >= 0) {
         value = `'${value}'`;
       }
-      // e.g. {name: 'Lana Del Grey'} => ["name='Lana Del Grey'"]
-      // e.g. {sleepy: true} => ["sleepy=true"]
+      // e.g. {name: 'Flying Dutchman'} => ["name='Flying Dutchman'"]
+      // e.g. {devoured: true} => ["devoured=true"]
       arr.push(`${key} = ${value}`);
     }
   }
 
-  // translate array of strings to a single comma-separated string
+  // Translate array of strings to a single comma-separated string
   return arr.toString();
 }
 
-// Object for all our SQL statement functions.
+// Object for all SQL statement functions
 const orm = {
+  // Function displaying all burgers to the page
   selectAll: (tableInput, cb) => {
     const queryString = `SELECT * FROM ${tableInput};`;
 
@@ -51,6 +50,7 @@ const orm = {
       cb(result);
     });
   },
+  // Function adding new burger
   insertOne: (table, cols, vals, cb) => {
     const queryString = `INSERT INTO ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)});`;
 
@@ -64,10 +64,11 @@ const orm = {
       cb(result);
     });
   },
-  // An example of objColVals would be {name: panther, sleepy: true}
+  // Function updating "devoured" state of selected burger
+  // Example of objColVals would be {name: hamburger, devoured: true}
   updateOne: (table, objColVals, condition, cb) => {
     const queryString = `UPDATE ${table} SET ${objToSql(objColVals)} WHERE ${condition};`;
-    //false to true - cb
+
     console.log(queryString);
 
     connection.query(queryString, (err, result) => {
@@ -78,6 +79,7 @@ const orm = {
       cb(result);
     });
   },
+  // Function deleting selected burger
   deleteOne: (table, condition, cb) => {
     const queryString = `DELETE FROM ${table} WHERE ${condition};`;
     connection.query(queryString, (err, result) => {
@@ -90,5 +92,5 @@ const orm = {
   }
 };
 
-// Export the orm object for the model (burger.js).
+// Export the orm object for the model (burger.js)
 module.exports = orm;

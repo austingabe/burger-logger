@@ -1,10 +1,12 @@
+// Dependency
 const express = require("express");
 const router = express.Router();
 
-// Import the model (burger.js) to use its database functions.
+// Import the model (burger.js) to use its database functions
 const burger = require("../models/burger.js");
 
-// Create all our routes and set up logic within those routes where required.
+// Create all our routes and set up logic within those routes where required
+// GET method renders all current burgers to the page
 router.get("/", (req, res) => {
   burger.selectAll(data => {
     let hbsObject = {
@@ -14,7 +16,7 @@ router.get("/", (req, res) => {
     res.render("index", hbsObject);
   });
 });
-
+// POST method creates a new burger entry
 router.post("/api/burgers", (req, res) => {
   burger.insertOne([
     "burger_name", "devoured"
@@ -25,7 +27,7 @@ router.post("/api/burgers", (req, res) => {
     res.json({ id: result.insertId });
   });
 });
-
+// PUT method updates the "devoured" status of a selected burger
 router.put("/api/burgers/:id", (req, res) => {
   const condition = `id = ${req.params.id}`;
 
@@ -42,7 +44,7 @@ router.put("/api/burgers/:id", (req, res) => {
     }
   });
 });
-
+// DELETE method deletes selected burger 
 router.delete("/api/burgers/:id", (req, res) => {
   const condition = `id = ${req.params.id}`;
 
@@ -56,5 +58,5 @@ router.delete("/api/burgers/:id", (req, res) => {
   });
 });
 
-// Export routes for server.js to use.
+// Export routes for server.js to use
 module.exports = router;

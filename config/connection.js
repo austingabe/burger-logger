@@ -1,5 +1,6 @@
-// Set up MySQL connection.
+// Requiring .env file for password
 require("dotenv").config();
+// Set up MySQL connection
 const mysql = require("mysql");
 
 const connection = mysql.createConnection({
@@ -10,7 +11,7 @@ const connection = mysql.createConnection({
   database: "burgers_db"
 });
 
-// Make connection.
+// Make connection
 connection.connect(err => {
   if (err) {
     console.error("error connecting: " + err.stack);
@@ -19,5 +20,5 @@ connection.connect(err => {
   console.log("connected as id " + connection.threadId);
 });
 
-// Export connection for our ORM to use.
+// Export connection for ORM to use
 module.exports = connection;
