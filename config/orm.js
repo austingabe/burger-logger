@@ -80,7 +80,7 @@ const orm = {
   },
   deleteOne: (table, condition, cb) => {
     const queryString = `DELETE FROM ${table} WHERE ${condition};`;
-    connection.query(queryString, function(err, result) {
+    connection.query(queryString, (err, result) => {
       if (err) {
         throw err;
       }
